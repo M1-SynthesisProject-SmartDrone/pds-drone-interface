@@ -15,8 +15,8 @@ set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 # OUTPUT DIR SETTINGS
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/lib)
 
 # COMPILER OPTIONS
 set(CMAKE_CXX_STANDARD 17)
@@ -56,6 +56,8 @@ find_package(Threads)
 link_libraries(
     ${BL_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
+    dl
+    config++
 )
 add_subdirectory(lib)
 include_directories(lib)
