@@ -1,0 +1,8 @@
+
+tmp_folder = "/path/to/folder";
+
+drone:
+{
+    serial_path = "/dev/ttyUSB0";
+    baudrate = 57600;
+}
