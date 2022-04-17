@@ -9,7 +9,7 @@ namespace fs = std::filesystem;
 /**
  * Find the config file path from the executable path
  */
-fs::path getConfigPath(const char *argv[])
+fs::path getConfigPath(char *argv[])
 {
     // argv[0] contains the executable called
     fs::path exePath(argv[0]);
@@ -22,7 +22,7 @@ fs::path getConfigPath(const char *argv[])
     return configPath;
 }
 
-ConfigParams parseConfig(int argc, const char *argv[])
+ConfigParams parseConfig(int argc, char *argv[])
 {
     fs::path configPath = getConfigPath(argv);
 
@@ -32,10 +32,10 @@ ConfigParams parseConfig(int argc, const char *argv[])
     const libconfig::Setting& root = config.getRoot();
 
     const auto& globalParams = GlobalParams{
-        root.lookup("tmp_folder")
+        root["tmp_folder"]
     };
 
-    const auto& droneSettings = root["mongodb"];
+    const auto& droneSettings = root["drone"];
     const auto droneParams = DroneParams{
         droneSettings["serial_path"],
         droneSettings["baudrate"]
