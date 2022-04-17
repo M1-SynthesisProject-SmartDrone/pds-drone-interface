@@ -1,5 +1,6 @@
 #include "config_parser.h"
 
+#include <iostream>
 #include <filesystem>
 #include <libconfig.h++>
 
@@ -37,6 +38,7 @@ ConfigParams parseConfig(int argc, char *argv[])
 
     const auto& droneSettings = root["drone"];
     const auto droneParams = DroneParams{
+        droneSettings["check_drone"],
         droneSettings["serial_path"],
         droneSettings["baudrate"]
     };

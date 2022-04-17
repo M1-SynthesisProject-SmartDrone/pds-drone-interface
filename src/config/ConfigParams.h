@@ -10,6 +10,7 @@ struct GlobalParams
 
 struct DroneParams
 {
+    bool checkDrone;
     std::string serialPath;
     int baudrate;
 };
