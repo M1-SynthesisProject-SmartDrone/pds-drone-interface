@@ -17,7 +17,7 @@ void DroneSender_ThreadClass::run()
     {
         onStartLoop();
 
-
+        
 
         onEndLoop();
     }

@@ -53,6 +53,8 @@ find_package(Threads)
 ###                                            LINKS                                                ##
 ######################################################################################################
 
+message (" got ${BL_DEFINITIONS}")
+
 link_libraries(
     ${BL_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
