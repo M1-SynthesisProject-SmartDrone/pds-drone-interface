@@ -25,6 +25,12 @@ namespace pdsChannels
 
     // ==== INFOS CHANNELS ====
     /**
+     * 1 int8 (char) field : 
+     *  - isArmed
+     */
+    extern blc_channel state;
+
+    /**
      * 13 float fields, see mavlink_highres_imu_t structure
      */
     extern blc_channel highresImu;
@@ -34,6 +40,11 @@ namespace pdsChannels
      */
     extern blc_channel heartbeat;
 
+    /**
+     * 6 float fields : see mavlink_altitude_t
+     */
+    extern blc_channel altitude;
+    
     /**
      * 6 float fields : see mavlink_attitude_t
      */
@@ -48,6 +59,17 @@ namespace pdsChannels
      * 8 int32 fields : see mavlink_global_position_int_t
      */
     extern blc_channel globalPosition;
+
+    /**
+     * 6 int32 fields :
+     *  - int32_t current_consumed  [mAh] Consumed charge, -1: autopilot does not provide consumption estimate
+     *  - int32_t energy_consumed [hJ] Consumed energy, -1: autopilot does not provide energy consumption estimate
+     *  - int16_t temperature [cdegC] Temperature of the battery. INT16_MAX for unknown temperature.
+     *  - int16_t current_battery [cA] Battery current, -1: autopilot does not measure the current
+     *  - int8_t battery_remaining [%] Remaining battery energy. Values: [0-100], -1: autopilot does not estimate the remaining battery.
+     *  - int32_t time_remaining [s] Remaining battery time, 0: autopilot does not provide remaining battery time estimate
+     */
+    extern blc_channel battery;
 
     // ==== FUNCTIONS ====
     void closeChannels();

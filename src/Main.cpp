@@ -82,7 +82,7 @@ void handleDrone(bool checkDrone, shared_ptr<Drone> drone, char* serialPath, int
 void initDrone(shared_ptr<Drone> drone, char* serialPath, int serialBaudrate)
 {
     LOG_F(INFO, "Try connecting to drone on %s with baudrate %d", serialPath, serialBaudrate);
-    drone.get()->open(serialPath, serialBaudrate);
+    drone->open(serialPath, serialBaudrate);
     if (drone->init_communication() != 0)
     {
         stringstream ss;
