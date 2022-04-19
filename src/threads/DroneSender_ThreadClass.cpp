@@ -1,7 +1,7 @@
 #include "DroneSender_ThreadClass.h"
 
 DroneSender_ThreadClass::DroneSender_ThreadClass(std::shared_ptr<Drone> drone)
-    : Abstract_ThreadClass("drone_receiver", 30, 25)
+    : Abstract_ThreadClass("drone_sender", 30, 25)
 {
     m_drone = drone;
 }
