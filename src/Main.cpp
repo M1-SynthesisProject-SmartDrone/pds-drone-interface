@@ -2,9 +2,15 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <unistd.h>
+#include <signal.h>
 
-#include "loguru/loguru.hpp"
+#include <loguru/loguru.hpp>
+
 #include "config/config_parser.h"
+
+#include "channels/channels.h"
+
 #include "threads/DroneReceiver_ThreadClass.h"
 #include "threads/DroneSender_ThreadClass.h"
 
@@ -14,12 +20,19 @@ const short DRONE_TIMEOUT_LIMIT = 10;
 
 void handleDrone(bool checkDrone, shared_ptr<Drone> drone, char* serialPath, int serialBaudrate);
 void initDrone(shared_ptr<Drone> drone, char* serialPath, int serialBaudrate);
+void signalHandler(int number);
+void exitProperly(int exitStatus);
 
 int main(int argc, char* argv[])
 {
     srand(time(0));
     loguru::init(argc, argv);
     LOG_F(INFO, "Start DroneInterface program");
+
+    // Init sigaction handler
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
+    signal(SIGFPE, signalHandler);
 
     LOG_F(INFO, "Parse config");
     ConfigParams params = parseConfig(argc, argv);
@@ -90,4 +103,34 @@ void initDrone(shared_ptr<Drone> drone, char* serialPath, int serialBaudrate)
     // If GPS enabled
     drone->setMode_position();
     usleep(1000 * 10); // 10ms
+}
+
+void signalHandler(int number)
+{
+    int exitStatus = 0;
+    switch (number)
+    {
+    case SIGINT:
+        LOG_F(WARNING, "SIGINT caught");
+        exitProperly(0);
+        break;
+    case SIGTERM:
+        LOG_F(WARNING, "SIGTERM caught");
+        exitProperly(1);
+        break;
+    case SIGFPE:
+        LOG_F(WARNING, "SIGFPE caught");
+        exitProperly(2);
+        break;
+    default:
+        LOG_F(WARNING, "Unhandled signal caught : %d", number);
+        break;
+    }
+}
+
+void exitProperly(int exitStatus)
+{
+    LOG_F(INFO, "Clear channels");
+    pdsChannels::closeChannels();
+    exit(exitStatus);
 }

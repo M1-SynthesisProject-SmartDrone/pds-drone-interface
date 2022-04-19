@@ -48,6 +48,9 @@ namespace pdsChannels
      * 8 int32 fields : see mavlink_global_position_int_t
      */
     extern blc_channel globalPosition;
+
+    // ==== FUNCTIONS ====
+    void closeChannels();
 }
 
 
