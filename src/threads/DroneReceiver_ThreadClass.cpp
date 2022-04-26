@@ -21,23 +21,28 @@ DroneReceiver_ThreadClass::~DroneReceiver_ThreadClass()
 void DroneReceiver_ThreadClass::run()
 {
     initRun();
+    pdsChannels::altitude.floats[0] += 0.0;
 
     while (isRunFlag())
     {
-        onStartLoop();
+        // onStartLoop();
 
-        mavlink_message_t message;
-        if (m_drone->read_message(message))
-        {
-            handleMessage(message);
-        }
-        else
-        {
-            LOG_F(ERROR, "Cannot read message : %s", strerror(errno));
-        }
+        // mavlink_message_t message;
+        // if (m_drone->read_message(message))
+        // {
+        //     handleMessage(message);
+        // }
+        // else
+        // {
+        //     LOG_F(ERROR, "Cannot read message : %s", strerror(errno));
+        // }
 
-        onEndLoop();
+        pdsChannels::altitude.floats[0] += 0.0001;
+        usleep(20);
+
+        // onEndLoop();
     }
+    LOG_F(INFO, "End of the drone receiver thread");
 }
 
 void DroneReceiver_ThreadClass::handleMessage(mavlink_message_t& message)
@@ -209,7 +214,7 @@ void DroneReceiver_ThreadClass::handleAttitude(mavlink_attitude_t& attitude)
 #endif
     if (m_drone->attitude.time_boot_ms > attitude.time_boot_ms)
     {
-        LOG_F(WARNING, "Received time boot ms before actual one (%ld vs %ld)",
+        LOG_F(WARNING, "Received time boot ms before actual one (%d vs %d)",
             m_drone->attitude.time_boot_ms,
             attitude.time_boot_ms);
     }
@@ -238,7 +243,7 @@ void DroneReceiver_ThreadClass::handleLocalPosition(mavlink_local_position_ned_t
 #endif
     if (m_drone->local_position_ned.time_boot_ms > localPosition.time_boot_ms)
     {
-        LOG_F(WARNING, "Received time boot ms before actual one (%ld vs %ld)",
+        LOG_F(WARNING, "Received time boot ms before actual one (%d vs %d)",
             m_drone->local_position_ned.time_boot_ms,
             localPosition.time_boot_ms);
     }
@@ -268,7 +273,7 @@ void DroneReceiver_ThreadClass::handleGlobalPosition(mavlink_global_position_int
 #endif
     if (m_drone->global_position_int.time_boot_ms > globalPosition.time_boot_ms)
     {
-        LOG_F(WARNING, "Received time boot ms before actual one (%ld vs %ld)",
+        LOG_F(WARNING, "Received time boot ms before actual one (%d vs %d)",
             m_drone->global_position_int.time_boot_ms,
             globalPosition.time_boot_ms);
     }

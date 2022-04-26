@@ -53,7 +53,7 @@ public:
 	bool debug;
 	std::string uart_name;
 	int  baudrate;
-	int  status;
+	int  status = 0;
 
 public:
 

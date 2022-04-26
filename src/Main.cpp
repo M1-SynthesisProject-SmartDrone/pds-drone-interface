@@ -23,6 +23,8 @@ void initDrone(shared_ptr<Drone> drone, char* serialPath, int serialBaudrate);
 void signalHandler(int number);
 void exitProperly(int exitStatus);
 
+vector<unique_ptr<Abstract_ThreadClass>> threads;
+
 int main(int argc, char* argv[])
 {
     srand(time(0));
@@ -39,8 +41,6 @@ int main(int argc, char* argv[])
 
     auto drone = make_shared<Drone>();
     handleDrone(params.drone.checkDrone, drone, params.drone.serialPath.data(), params.drone.baudrate);
-
-    vector<unique_ptr<Abstract_ThreadClass>> threads;
     threads.push_back(make_unique<DroneSender_ThreadClass>(drone));
     threads.push_back(make_unique<DroneReceiver_ThreadClass>(drone));
 
@@ -54,6 +54,11 @@ int main(int argc, char* argv[])
     {
         thread->join();
     }
+    LOG_F(INFO, "All threads are stopped, we can free all channels now");
+    pdsChannels::closeChannels();
+
+    threads.clear();
+
 
     LOG_F(INFO, "End of the program DroneInterface");
     return EXIT_SUCCESS;
@@ -130,7 +135,9 @@ void signalHandler(int number)
 
 void exitProperly(int exitStatus)
 {
-    LOG_F(INFO, "Clear channels");
-    pdsChannels::closeChannels();
-    exit(exitStatus);
+    LOG_F(INFO, "Stop all threads");
+    for (auto& thread : threads)
+    {
+        thread->lazyStop();
+    }
 }
