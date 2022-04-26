@@ -1,10 +1,10 @@
 /**
  * @brief Tool class which convey to open a serial port
  * @file serial_port.cpp
- * 
+ *
  * @author Sylvain Colomer
  * @date 19/04/19
- * @version 1.1 
+ * @version 1.1
  */
 
 #include <iostream>
@@ -45,7 +45,7 @@ void Serial_Port::initialize_defaults()
 	fd = -1;
 	status = SERIAL_PORT_CLOSED;
 
-	uart_name = (char *)"/dev/ttyUSB0";
+	uart_name = (char*)"/dev/ttyUSB0";
 	baudrate = 57600;
 
 	// Start mutex
@@ -60,7 +60,7 @@ void Serial_Port::initialize_defaults()
 /**
  * Read from Serial
  */
-int Serial_Port::read_message(mavlink_message_t &message)
+int Serial_Port::read_message(mavlink_message_t& message)
 {
 	uint8_t cp;
 	mavlink_status_t status;
@@ -135,12 +135,12 @@ int Serial_Port::read_message(mavlink_message_t &message)
 /**
  * Write to Serial
  */
-int Serial_Port::write_message(const mavlink_message_t &message)
+int Serial_Port::write_message(const mavlink_message_t& message)
 {
 	char buf[300];
 
 	// Translate message to buffer
-	unsigned len = mavlink_msg_to_send_buffer((uint8_t *)buf, &message);
+	unsigned len = mavlink_msg_to_send_buffer((uint8_t*)buf, &message);
 	//  cout<<__FUNCTION__<<" after mavlink_msg_to_send_buffer"<<endl;
 
 	// Write buffer to serial port, locks port while writing
@@ -188,15 +188,18 @@ int Serial_Port::open_serial()
  */
 void Serial_Port::close_serial()
 {
-	//Display_IHM::getInstanceOf().printLog("CLOSE PORT\n");
-
-	int result = close(fd);
-	if (result)
+	// Don't try to close it if already closed (or never closed maybe)
+	if (status)
 	{
-		fprintf(stderr, "WARNING: Error on port close (%i)\n", result);
-	}
+		cout << "Close serial port" << endl;
+		int result = close(fd);
+		if (result)
+		{
+			fprintf(stderr, "WARNING: Error on port close (%i)\n", result);
+		}
 
-	status = false;
+		status = false;
+	}
 }
 
 /**
@@ -217,7 +220,7 @@ void Serial_Port::handle_quit()
 /**
  * Helper Function - Open Serial Port File Descriptor
  */
-int Serial_Port::_open_port(const char *port)
+int Serial_Port::_open_port(const char* port)
 {
 	// Open serial port
 	// O_RDWR - Read and write
@@ -346,8 +349,8 @@ bool Serial_Port::_setup_port(int baud)
 		}
 		break;
 
-	// These two non-standard (by the 70'ties ) rates are fully supported on
-	// current Debian and Mac OS versions (tested since 2010).
+		// These two non-standard (by the 70'ties ) rates are fully supported on
+		// current Debian and Mac OS versions (tested since 2010).
 	case 460800:
 		if (cfsetispeed(&config, B460800) < 0 || cfsetospeed(&config, B460800) < 0)
 		{
@@ -383,7 +386,7 @@ bool Serial_Port::_setup_port(int baud)
 /**
  * Read Port with Lock
  */
-int Serial_Port::_read_port(uint8_t &cp)
+int Serial_Port::_read_port(uint8_t& cp)
 {
 	// Lock
 	pthread_mutex_lock(&lock);
@@ -398,7 +401,7 @@ int Serial_Port::_read_port(uint8_t &cp)
 /**
  *  Write Port with Lock
  */
-int Serial_Port::_write_port(char *buf, unsigned len)
+int Serial_Port::_write_port(char* buf, unsigned len)
 {
 	struct timeval tw;
 	double t_currentw, dtw;

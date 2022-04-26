@@ -121,6 +121,7 @@ void Abstract_ThreadClass::stop()
 {
     currentState = LifeCoreState::STOP;
     setRunFlag(false);
+    LOG_F(INFO, "Wait for thread %s to end", id.c_str());
     principalThread.join();
 }
 
@@ -157,7 +158,8 @@ bool Abstract_ThreadClass::isRunFlag() const
 void Abstract_ThreadClass::setRunFlag(bool runFlag)
 {
     runFlag_mutex.lock();
-    runFlag = runFlag;
+    LOG_F(INFO, "Stop run flag");
+    this->runFlag = runFlag;
     runFlag_mutex.unlock();
 
 }

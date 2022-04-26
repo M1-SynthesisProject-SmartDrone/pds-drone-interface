@@ -32,21 +32,24 @@ Drone::Drone(std::string serialPort_path, int serialPort_baudrate)
 {
     communication = DRONE_SERIAL;
     cout << "Data_Drone  " << serialPort_path << "\n";
-    serial1 = std::shared_ptr<Serial_Port>(new Serial_Port(serialPort_path, serialPort_baudrate));
+    serial1 = std::make_shared<Serial_Port>(serialPort_path, serialPort_baudrate);
 }
 
 void Drone::open(char* serialPort_path, int serialPort_baudrate)
 {
     communication = DRONE_SERIAL;
     cout << "Data_Drone  " << serialPort_path << "\n";
-    serial1 = std::shared_ptr<Serial_Port>(new Serial_Port(serialPort_path, serialPort_baudrate));
+    serial1 = std::make_shared<Serial_Port>(serialPort_path, serialPort_baudrate);
 }
 
 
 
 Drone::~Drone()
 {
-    serial1.get()->close_serial();
+    if (serial1 != nullptr) 
+    {
+        serial1->close_serial();
+    } 
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COMMUNICATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,7 +82,7 @@ int Drone::init_communication()
 {
     if (communication == DRONE_SERIAL)
     {
-        return Drone::serial1.get()->open_serial();
+        return Drone::serial1->open_serial();
     }
 
     return 0;
