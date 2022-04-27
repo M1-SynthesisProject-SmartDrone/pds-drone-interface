@@ -14,7 +14,7 @@ namespace pdsChannels
 {
     // ==== COMMAND CHANNELS ====
     /**
-     * 2 int8 (char) values : ARM & DISARM
+     * 3 int8 (char) values : ARM, DISARM and TAKE_OFF
      */
     extern blc_channel controlCommands;
     /**

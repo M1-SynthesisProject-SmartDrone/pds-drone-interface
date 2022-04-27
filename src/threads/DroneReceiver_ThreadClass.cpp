@@ -27,17 +27,17 @@ void DroneReceiver_ThreadClass::run()
     {
         // onStartLoop();
 
-        // mavlink_message_t message;
-        // if (m_drone->read_message(message))
-        // {
-        //     handleMessage(message);
-        // }
-        // else
-        // {
-        //     LOG_F(ERROR, "Cannot read message : %s", strerror(errno));
-        // }
+        mavlink_message_t message;
+        if (m_drone->read_message(message))
+        {
+            handleMessage(message);
+        }
+        else
+        {
+            LOG_F(ERROR, "Cannot read message : %s", strerror(errno));
+        }
 
-        pdsChannels::altitude.floats[0] += 0.0001;
+        pdsChannels::altitude.floats[0] += 0.000001;
         usleep(20);
 
         // onEndLoop();

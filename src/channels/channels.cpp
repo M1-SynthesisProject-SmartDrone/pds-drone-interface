@@ -2,7 +2,7 @@
 
 namespace pdsChannels
 {
-    blc_channel controlCommands("/pdsDrone.control.commands", BLC_CHANNEL_READ, 'INT8', 'NDEF', 1, 2);
+    blc_channel controlCommands("/pdsDrone.control.commands", BLC_CHANNEL_READ, 'INT8', 'NDEF', 1, 3);
     blc_channel controlMotors("/pdsDrone.control.motors", BLC_CHANNEL_READ, 'FL32', 'NDEF', 1, 4);
 
     blc_channel state("/pdsDrone.state", BLC_CHANNEL_WRITE, 'INT8', 'NDEF', 1, 1);

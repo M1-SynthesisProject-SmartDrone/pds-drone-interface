@@ -9,7 +9,15 @@
 class DroneSender_ThreadClass : public Abstract_ThreadClass
 {
 private:
+    const float DRONE_SPEED = 200.0;
+
     std::shared_ptr<Drone> m_drone;
+
+    // One method per blc_channel
+    void handleControlCommands();
+
+    float findValue(float input);
+    void handleControlMotors();
 public:
     DroneSender_ThreadClass(std::shared_ptr<Drone> drone);
     ~DroneSender_ThreadClass();
