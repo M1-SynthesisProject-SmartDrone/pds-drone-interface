@@ -13,6 +13,7 @@
 
 #include "threads/DroneReceiver_ThreadClass.h"
 #include "threads/DroneSender_ThreadClass.h"
+#include "threads/ImageReceiver_ThreadClass.h"
 
 using namespace std;
 
@@ -47,10 +48,20 @@ int main(int argc, char* argv[])
     }
     else
     {
-        auto drone = make_shared<Drone>();
-        handleDrone(params.drone.checkDrone, drone, params.drone.serialPath.data(), params.drone.baudrate);
-        threads.push_back(make_unique<DroneSender_ThreadClass>(drone));
-        threads.push_back(make_unique<DroneReceiver_ThreadClass>(drone));
+        // Drone related threads
+        if (params.drone.checkDrone)
+        {
+            auto drone = make_shared<Drone>();
+            handleDrone(params.drone.checkDrone, drone, params.drone.serialPath.data(), params.drone.baudrate);
+            threads.push_back(make_unique<DroneSender_ThreadClass>(drone));
+            threads.push_back(make_unique<DroneReceiver_ThreadClass>(drone));
+        }
+
+        // Camera related threads
+        if (params.camera.checkCamera)
+        {
+            threads.push_back(make_unique<ImageReceiver_ThreadClass>(params.camera.deviceId, params.camera.framerate));
+        }
 
         LOG_F(INFO, "%ld threads stored", threads.size());
         for (auto& thread : threads)

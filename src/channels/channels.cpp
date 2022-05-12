@@ -14,7 +14,8 @@ namespace pdsChannels
     // 'INT32' is not a valid value (compiler error), and FL32 does the same
     blc_channel globalPosition("/pdsDrone.sensors.global_position", BLC_CHANNEL_WRITE, 'FL32', 'NDEF', 1, 8);
     blc_channel battery("/pdsDrone.sensors.battery", BLC_CHANNEL_WRITE, 'FL32', 'NDEF', 1, 6);
-    blc_channel image("/pdsDrone.camera.image", BLC_CHANNEL_WRITE, 'UIN8', 'NDEF', 1, 4096);
+    blc_channel image("/pdsDrone.camera.image", BLC_CHANNEL_WRITE, 'UIN8', 'NDEF', 1, 4000000);
+    blc_channel imageSize("/pdsDrone.camera.image_size", BLC_CHANNEL_WRITE, 'UI32', 'NDEF', 1, 1);
 
     void closeChannels()
     {
@@ -29,5 +30,6 @@ namespace pdsChannels
         globalPosition.remove();
         battery.remove();
         image.remove();
+        imageSize.remove();
     }
 }

@@ -37,6 +37,13 @@ ConfigParams parseConfig(int argc, char *argv[])
         root["is_mock_mode"]
     };
 
+    const auto& cameraSettings = root["camera"];
+    const auto cameraParams = CameraParams{
+        cameraSettings["check_camera"],
+        cameraSettings["device_id"],
+        cameraSettings["framerate"]
+    };
+    
     const auto& droneSettings = root["drone"];
     const auto droneParams = DroneParams{
         droneSettings["check_drone"],
@@ -44,5 +51,5 @@ ConfigParams parseConfig(int argc, char *argv[])
         droneSettings["baudrate"]
     };
 
-    return ConfigParams(globalParams, droneParams);
+    return ConfigParams(globalParams, cameraParams, droneParams);
 }

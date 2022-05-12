@@ -9,6 +9,13 @@ struct GlobalParams
     bool isMockMode;
 };
 
+struct CameraParams
+{
+    bool checkCamera;
+    int deviceId;
+    int framerate;
+};
+
 struct DroneParams
 {
     bool checkDrone;
@@ -22,13 +29,12 @@ struct DroneParams
 struct ConfigParams
 {
     GlobalParams global;
+    CameraParams camera;
     DroneParams drone;
 
-    ConfigParams(GlobalParams global, DroneParams drone)
-    {
-        this->global = global;
-        this->drone = drone;
-    }
+    ConfigParams(GlobalParams global, CameraParams camera, DroneParams drone):
+        global(global), camera(camera), drone(drone)
+    {}
 };
 
 #endif // __CONFIGPARAMS_H__

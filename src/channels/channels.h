@@ -73,9 +73,13 @@ namespace pdsChannels
 
     /**
      * The image captured by the camera, stored in a unsigned char 
-     * array of size 4096
+     * array of size 4mb
      */
     extern blc_channel image;
+    /**
+     * 1 uint32 field containing the number of bytes written in the channel "image"
+     */
+    extern blc_channel imageSize;
 
     // ==== FUNCTIONS ====
     void closeChannels();

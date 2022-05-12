@@ -2,6 +2,13 @@
 tmp_folder = "/path/to/folder";
 is_mock_mode = false;
 
+camera:
+{
+    check_camera = true;
+    device_id = 0;
+    framerate = 15;
+};
+
 drone:
 {
     check_drone = true;
