@@ -41,7 +41,6 @@ void DroneSender_ThreadClass::handleControlCommands()
         // Only arm if the manual control mode "joystick" is neutral
         m_drone->command_directControl(0.0, 0.0, 0.0, 0.0);
         m_drone->command_arm(1);
-
     }
     // UNARM
     if (commandsChannel.chars[1] == 1 && m_drone->motors == ARM)
@@ -58,22 +57,26 @@ void DroneSender_ThreadClass::handleControlCommands()
         LOG_F(INFO, "Start drone motors");
 #endif
         // Launch the rotors at max speed in order to start rotors
+        // Send multiple times to be sure that the drone started his engines
+        m_drone->command_directControl(0.0, 0.0, 1000.0, 0.0);
+        m_drone->command_directControl(0.0, 0.0, 1000.0, 0.0);
+        m_drone->command_directControl(0.0, 0.0, 1000.0, 0.0);
         m_drone->command_directControl(0.0, 0.0, 1000.0, 0.0);
         m_drone->command_directControl(0.0, 0.0, 0.0, 0.0);
     }
 }
 
-float DroneSender_ThreadClass::findValue(float input)
+float DroneSender_ThreadClass::findValue(float input, float maxSpeed)
 {
     if (input != 0.0)
     {
         if (input < -0.5)
         {
-            return -DRONE_SPEED;
+            return -maxSpeed;
         }
         else if (input > 0.5)
         {
-            return DRONE_SPEED;
+            return maxSpeed;
         }
     }
     return 0.0;
@@ -88,10 +91,10 @@ void DroneSender_ThreadClass::handleControlMotors()
             // We have a threshold arround 0 (about 1)
         blc_channel motorsChannel = pdsChannels::controlMotors;
 
-        float x = findValue(motorsChannel.floats[0]);
-        float y = findValue(motorsChannel.floats[1]);
-        float z = findValue(motorsChannel.floats[2]);
-        float r = findValue(motorsChannel.floats[3]);
+        float x = findValue(motorsChannel.floats[0], DRONE_SPEED);
+        float y = findValue(motorsChannel.floats[1], DRONE_SPEED);
+        float z = findValue(motorsChannel.floats[2], 800.0);
+        float r = findValue(motorsChannel.floats[3], DRONE_SPEED);
 
 #ifdef DEBUG_DRONESENDER_THREAD
         LOG_F(INFO, "Send command direct control with values (%f, %f, %f, %f)", x, y, z, r);
