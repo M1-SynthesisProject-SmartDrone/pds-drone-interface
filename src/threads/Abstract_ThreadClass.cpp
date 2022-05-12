@@ -47,6 +47,8 @@ void Abstract_ThreadClass::onStartLoop()
     // We don't want to start before the next period
     if (lastLoopTime < task_period)
     {
+        LOG_F(INFO, "wait for %ld ms", task_period - lastLoopTime);
+
         usleep((task_period - lastLoopTime) * 1000);
     }
 
@@ -59,7 +61,7 @@ void Abstract_ThreadClass::onEndLoop()
 
     long lastLoopTimeUs = (end_checkpoint.tv_sec - front_checkpoint.tv_sec) * 1000000L + (end_checkpoint.tv_usec - front_checkpoint.tv_usec);
     lastLoopTime = lastLoopTimeUs / 1000;
-    LOG_F(INFO, "took %ld ms", lastLoopTime);
+    // LOG_F(INFO, "took %ld ms", lastLoopTime);
     if (lastLoopTime > task_deadline)
     {
         LOG_F(ERROR, "Task deadline exedeed (expected %dms but got %ldms)", task_deadline, lastLoopTime);

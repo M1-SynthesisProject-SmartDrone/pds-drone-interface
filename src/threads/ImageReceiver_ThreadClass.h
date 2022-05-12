@@ -18,7 +18,7 @@ private:
     // In case of we want opmtimization of space (but we will lose time)
     // const std::vector<int> COMPRESSION_PARAMS{ 
     //     cv::IMWRITE_PNG_COMPRESSION, 1, 
-    //     cv::IMWRITE_PNG_STRATEGY, cv::IMWRITE_PNG_STRATEGY_RLE 
+    //     cv::IMWRITE_PNG_STRATEGY, cv::IMWRITE_PNG_STRATEGY_DEFAULT
     // };
 
 public:
