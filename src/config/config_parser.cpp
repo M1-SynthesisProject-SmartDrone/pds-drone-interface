@@ -33,7 +33,8 @@ ConfigParams parseConfig(int argc, char *argv[])
     const libconfig::Setting& root = config.getRoot();
 
     const auto& globalParams = GlobalParams{
-        root["tmp_folder"]
+        root["tmp_folder"],
+        root["is_mock_mode"]
     };
 
     const auto& droneSettings = root["drone"];

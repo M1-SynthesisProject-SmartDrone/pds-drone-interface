@@ -16,7 +16,7 @@ private:
     // One method per blc_channel
     void handleControlCommands();
 
-    float findValue(float input);
+    float findValue(float input, float maxSpeed);
     void handleControlMotors();
 public:
     DroneSender_ThreadClass(std::shared_ptr<Drone> drone);

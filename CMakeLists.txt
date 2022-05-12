@@ -46,14 +46,16 @@ find_package(blc_program REQUIRED)
 include_directories( ${BL_INCLUDE_DIRS} )
 add_definitions( ${BL_DEFINITIONS} )
 
+message("- Checking : OpenCV")
+find_package( OpenCV REQUIRED )
+include_directories(${OpenCV_INCLUDE_DIRS})
+
 message("- Checking : Thread")
 find_package(Threads)
 
 ######################################################################################################
 ###                                            LINKS                                                ##
 ######################################################################################################
-
-message (" got ${BL_DEFINITIONS}")
 
 link_libraries(
     ${BL_LIBRARIES}
@@ -86,6 +88,7 @@ file(COPY config/config.cfg DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 add_executable(${APP_NAME} ${drone_SRC})
 
 target_link_libraries(${APP_NAME} PUBLIC
+    ${OpenCV_LIBS}
     mavlink
     loguru
     -lconfig++

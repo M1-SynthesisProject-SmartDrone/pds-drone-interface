@@ -25,7 +25,7 @@ namespace pdsChannels
 
     // ==== INFOS CHANNELS ====
     /**
-     * 1 int8 (char) field : 
+     * 1 int8 (char) field :
      *  - isArmed
      */
     extern blc_channel state;
@@ -44,7 +44,7 @@ namespace pdsChannels
      * 6 float fields : see mavlink_altitude_t
      */
     extern blc_channel altitude;
-    
+
     /**
      * 6 float fields : see mavlink_attitude_t
      */
@@ -71,10 +71,15 @@ namespace pdsChannels
      */
     extern blc_channel battery;
 
+    /**
+     * The image captured by the camera, stored in a unsigned char 
+     * array of size 4096
+     */
+    extern blc_channel image;
+
     // ==== FUNCTIONS ====
     void closeChannels();
 }
-
 
 /**
  * Here are all channels types that we can define (extract of blc_core library source code)

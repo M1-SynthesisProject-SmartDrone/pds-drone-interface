@@ -6,6 +6,7 @@
 struct GlobalParams
 {
     std::string tmpFolderPath;
+    bool isMockMode;
 };
 
 struct DroneParams

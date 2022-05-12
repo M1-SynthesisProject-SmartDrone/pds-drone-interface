@@ -39,26 +39,34 @@ int main(int argc, char* argv[])
     LOG_F(INFO, "Parse config");
     ConfigParams params = parseConfig(argc, argv);
 
-    auto drone = make_shared<Drone>();
-    handleDrone(params.drone.checkDrone, drone, params.drone.serialPath.data(), params.drone.baudrate);
-    threads.push_back(make_unique<DroneSender_ThreadClass>(drone));
-    threads.push_back(make_unique<DroneReceiver_ThreadClass>(drone));
-
-    LOG_F(INFO, "%ld threads stored", threads.size());
-    for (auto& thread : threads)
+    if (params.global.isMockMode)
     {
-        thread->start();
+        // Wait until a signal is catched
+        LOG_F(INFO, "Server in mock mode, nothing is really done");
+        pause();
     }
-
-    for (auto& thread : threads)
+    else
     {
-        thread->join();
+        auto drone = make_shared<Drone>();
+        handleDrone(params.drone.checkDrone, drone, params.drone.serialPath.data(), params.drone.baudrate);
+        threads.push_back(make_unique<DroneSender_ThreadClass>(drone));
+        threads.push_back(make_unique<DroneReceiver_ThreadClass>(drone));
+
+        LOG_F(INFO, "%ld threads stored", threads.size());
+        for (auto& thread : threads)
+        {
+            thread->start();
+        }
+
+        for (auto& thread : threads)
+        {
+            thread->join();
+        }
     }
-    LOG_F(INFO, "All threads are stopped, we can free all channels now");
+    LOG_F(INFO, "Free all channels now");
     pdsChannels::closeChannels();
 
     threads.clear();
-
 
     LOG_F(INFO, "End of the program DroneInterface");
     return EXIT_SUCCESS;
@@ -66,7 +74,8 @@ int main(int argc, char* argv[])
 
 void handleDrone(bool checkDrone, shared_ptr<Drone> drone, char* serialPath, int serialBaudrate)
 {
-    if (checkDrone) {
+    if (checkDrone)
+    {
         try
         {
             initDrone(drone, serialPath, serialBaudrate);

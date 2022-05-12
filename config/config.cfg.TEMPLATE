@@ -1,5 +1,6 @@
 
 tmp_folder = "/path/to/folder";
+is_mock_mode = false;
 
 drone:
 {
