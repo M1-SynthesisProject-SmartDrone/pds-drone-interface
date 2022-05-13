@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
         // Drone related threads
         if (params.drone.checkDrone)
         {
+            LOG_F(INFO, "Init drone and start related threads");
             auto drone = make_shared<Drone>();
             handleDrone(params.drone.checkDrone, drone, params.drone.serialPath.data(), params.drone.baudrate);
             threads.push_back(make_unique<DroneSender_ThreadClass>(drone));
@@ -60,6 +61,7 @@ int main(int argc, char* argv[])
         // Camera related threads
         if (params.camera.checkCamera)
         {
+            LOG_F(INFO, "Init camera and start related thread");
             threads.push_back(make_unique<ImageReceiver_ThreadClass>(params.camera.deviceId, params.camera.framerate));
         }
 
