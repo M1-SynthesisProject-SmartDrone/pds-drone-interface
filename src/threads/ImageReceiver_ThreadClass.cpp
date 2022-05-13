@@ -55,12 +55,14 @@ void ImageReceiver_ThreadClass::run()
 
         auto data = image.data;
         int size = image.total() * image.elemSize();
-        int dataSize = size * sizeof(uchar);
+        uint32_t dataSize = size * sizeof(uchar);
 
         // cout << dataSize << endl;
 
         memcpy(pdsChannels::image.uchars, data, dataSize);
-        pdsChannels::imageSize.uints16[0] = dataSize;
+        pdsChannels::imageSize.uints32[0] = image.rows;
+        pdsChannels::imageSize.uints32[1] = image.cols;
+        pdsChannels::imageSize.uints32[2] = dataSize;
 
         onEndLoop();
     }

@@ -77,7 +77,10 @@ namespace pdsChannels
      */
     extern blc_channel image;
     /**
-     * 1 uint32 field containing the number of bytes written in the channel "image"
+     * 3 uint32 field containing the resolution of the image :
+     *   - number of rows 
+     *   - number of cols
+     *   - buffer size
      */
     extern blc_channel imageSize;
 
