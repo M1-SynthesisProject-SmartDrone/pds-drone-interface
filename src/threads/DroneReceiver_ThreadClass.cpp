@@ -156,6 +156,7 @@ void DroneReceiver_ThreadClass::handleAck(mavlink_command_ack_t& commandAck)
             {
                 m_drone->tookOff = false;
             }
+            pdsChannels::state.chars[0] = 1;
         }
         else if (commandAck.result != MAV_RESULT_IN_PROGRESS)
         {

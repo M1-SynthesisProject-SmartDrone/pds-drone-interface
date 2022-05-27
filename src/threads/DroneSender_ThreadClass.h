@@ -15,9 +15,13 @@ private:
 
     // One method per blc_channel
     void handleControlCommands();
+    void handleControlMotors();
+    
+    // When m_drone is not set, those methods are used instead
+    void MOCKhandleControlCommands();
+    void MOCKhandleControlMotors();
 
     float findValue(float input, float maxSpeed);
-    void handleControlMotors();
 public:
     DroneSender_ThreadClass(std::shared_ptr<Drone> drone);
     ~DroneSender_ThreadClass();

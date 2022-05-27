@@ -47,8 +47,6 @@ void Abstract_ThreadClass::onStartLoop()
     // We don't want to start before the next period
     if (lastLoopTime < task_period)
     {
-        LOG_F(INFO, "wait for %ld ms", task_period - lastLoopTime);
-
         usleep((task_period - lastLoopTime) * 1000);
     }
 
@@ -162,10 +160,8 @@ bool Abstract_ThreadClass::isRunFlag() const
 void Abstract_ThreadClass::setRunFlag(bool runFlag)
 {
     runFlag_mutex.lock();
-    LOG_F(INFO, "Stop run flag");
     this->runFlag = runFlag;
     runFlag_mutex.unlock();
-
 }
 
 LifeCoreState Abstract_ThreadClass::getCurrentState() const

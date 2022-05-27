@@ -57,6 +57,12 @@ int main(int argc, char* argv[])
             threads.push_back(make_unique<DroneSender_ThreadClass>(drone));
             threads.push_back(make_unique<DroneReceiver_ThreadClass>(drone));
         }
+        else
+        {
+            // Start the drone sender in mock mode
+            shared_ptr<Drone> emptyPointer;
+            threads.push_back(make_unique<DroneSender_ThreadClass>(emptyPointer));
+        }
 
         // Camera related threads
         if (params.camera.checkCamera)
