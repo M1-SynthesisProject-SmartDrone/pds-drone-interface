@@ -22,8 +22,10 @@ private:
     void MOCKhandleControlMotors();
 
     float findValue(float input, float maxSpeed);
+
+    bool m_isMockMode;
 public:
-    DroneSender_ThreadClass(std::shared_ptr<Drone> drone);
+    DroneSender_ThreadClass(std::shared_ptr<Drone> drone, bool isMockMode = false);
     ~DroneSender_ThreadClass();
 
     void run();

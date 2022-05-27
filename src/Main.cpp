@@ -59,9 +59,9 @@ int main(int argc, char* argv[])
         }
         else
         {
-            // Start the drone sender in mock mode
-            shared_ptr<Drone> emptyPointer;
-            threads.push_back(make_unique<DroneSender_ThreadClass>(emptyPointer));
+            LOG_F(INFO, "Init drone sender in mock mode");
+            auto drone = make_shared<Drone>();
+            threads.push_back(make_unique<DroneSender_ThreadClass>(drone, true));
         }
 
         // Camera related threads
