@@ -23,6 +23,7 @@ void DroneSender_ThreadClass::run()
 
     while (isRunFlag())
     {
+        onStartLoop();
         if (m_isMockMode)
         {
             MOCKhandleControlCommands();
@@ -33,6 +34,7 @@ void DroneSender_ThreadClass::run()
             handleControlCommands();
             handleControlMotors();    
         }
+        onEndLoop();
     }
     LOG_F(INFO, "End of the drone sender thread");
 }
