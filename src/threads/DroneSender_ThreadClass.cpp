@@ -5,7 +5,7 @@
 
 using namespace std;
 
-#define DEBUG_DRONESENDER_THREAD
+// #define DEBUG_DRONESENDER_THREAD
 
 DroneSender_ThreadClass::DroneSender_ThreadClass(std::shared_ptr<Drone> drone, bool isMockMode)
     : Abstract_ThreadClass("drone_sender", 30, 25),
@@ -163,5 +163,9 @@ void DroneSender_ThreadClass::MOCKhandleControlMotors()
         pdsChannels::globalPosition.ints32[1] += y;
         pdsChannels::globalPosition.ints32[2] += z;
         pdsChannels::globalPosition.ints32[7] += r;
+        
+        pdsChannels::localPositionNed.floats[0] += x * 0.1f;
+        pdsChannels::localPositionNed.floats[1] += y * 0.1f;
+        pdsChannels::localPositionNed.floats[2] += z * 0.1f;
     }
 }
