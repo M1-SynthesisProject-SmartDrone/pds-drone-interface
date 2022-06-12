@@ -48,6 +48,7 @@ ConfigParams parseConfig(int argc, char *argv[])
     const auto droneParams = DroneParams{
         droneSettings["check_drone"],
         droneSettings["serial_path"],
+        droneSettings["sensors_only"],
         droneSettings["baudrate"]
     };
 

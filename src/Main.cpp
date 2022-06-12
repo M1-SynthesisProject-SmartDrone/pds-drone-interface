@@ -54,8 +54,8 @@ int main(int argc, char* argv[])
             LOG_F(INFO, "Init drone and start related threads");
             auto drone = make_shared<Drone>();
             handleDrone(params.drone.checkDrone, drone, params.drone.serialPath.data(), params.drone.baudrate);
-            threads.push_back(make_unique<DroneSender_ThreadClass>(drone));
-            threads.push_back(make_unique<DroneReceiver_ThreadClass>(drone));
+            threads.push_back(make_unique<DroneSender_ThreadClass>(drone, params.drone.isSensorsOnly));
+            threads.push_back(make_unique<DroneReceiver_ThreadClass>(drone, params.drone.isSensorsOnly));
         }
         else
         {

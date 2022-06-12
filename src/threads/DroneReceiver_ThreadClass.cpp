@@ -9,8 +9,8 @@
 
 using namespace std;
 
-DroneReceiver_ThreadClass::DroneReceiver_ThreadClass(shared_ptr<Drone> drone)
-    : Abstract_ThreadClass("drone_receiver", 30, 25)
+DroneReceiver_ThreadClass::DroneReceiver_ThreadClass(shared_ptr<Drone> drone, bool isSensorsOnly)
+    : Abstract_ThreadClass("drone_receiver", 30, 25), m_isSensorsOnly(isSensorsOnly)
 {
     m_drone = drone;
 }
@@ -25,6 +25,7 @@ void DroneReceiver_ThreadClass::run()
 
     while (isRunFlag())
     {
+        // Not really real time, we wait for new messages
         // onStartLoop();
 
         mavlink_message_t message;
@@ -114,6 +115,14 @@ void DroneReceiver_ThreadClass::handleMessage(mavlink_message_t& message)
 // This is where ar disarm state pass through blc_channels
 void DroneReceiver_ThreadClass::handleHeartbeat(mavlink_heartbeat_t& heartbeat)
 {
+    if (m_isSensorsOnly)
+    {
+#ifdef DRONERECEIVER_THREADCLASS_DEBUG
+        LOG_F(WARNING, "Sensors only mode, cancel the heartbeat handling");
+#endif
+        return;
+    }
+
     // We have a lot of messages types that we could handle, but only the arm state is important here
     if (heartbeat.type == MAV_TYPE_QUADROTOR) // Check if it has a chance to be our drone
     {
@@ -147,6 +156,13 @@ void DroneReceiver_ThreadClass::handleAck(mavlink_command_ack_t& commandAck)
     {
         // If arm / unarm, change the motor state
     case MAV_CMD_COMPONENT_ARM_DISARM:
+        if (m_isSensorsOnly)
+        {
+#ifdef DRONERECEIVER_THREADCLASS_DEBUG
+            LOG_F(WARNING, "Sensors only mode, cancel the heartbeat handling");
+#endif
+            return;
+        }
         if (isResultAccepted)
         {
             LOG_F(INFO, "ARM_DISARM Command Accepted");
@@ -233,6 +249,14 @@ void DroneReceiver_ThreadClass::handleAttitude(mavlink_attitude_t& attitude)
 
 void DroneReceiver_ThreadClass::handleLocalPosition(mavlink_local_position_ned_t& localPosition)
 {
+    if (m_isSensorsOnly)
+    {
+#ifdef DRONERECEIVER_THREADCLASS_DEBUG
+        LOG_F(WARNING, "Sensors only mode, cancel the heartbeat handling");
+#endif
+        return;
+    }
+
 #ifdef DRONERECEIVER_THREADCLASS_DEBUG
     stringstream ss;
     ss << "global_position : [x:" << localPosition.x
@@ -262,6 +286,14 @@ void DroneReceiver_ThreadClass::handleLocalPosition(mavlink_local_position_ned_t
 
 void DroneReceiver_ThreadClass::handleGlobalPosition(mavlink_global_position_int_t& globalPosition)
 {
+    if (m_isSensorsOnly)
+    {
+#ifdef DRONERECEIVER_THREADCLASS_DEBUG
+        LOG_F(WARNING, "Sensors only mode, cancel the heartbeat handling");
+#endif
+        return;
+    }
+    
 #ifdef DRONERECEIVER_THREADCLASS_DEBUG
     string buffer1 = "global_position : [lat:" + to_string(globalPosition.lat)
         + " lon: " + to_string(globalPosition.lon)

@@ -20,6 +20,7 @@ struct DroneParams
 {
     bool checkDrone;
     std::string serialPath;
+    bool isSensorsOnly;
     int baudrate;
 };
 

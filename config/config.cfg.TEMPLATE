@@ -13,5 +13,6 @@ drone:
 {
     check_drone = true;
     serial_path = "/dev/ttyUSB0";
+    capture_position = false;
     baudrate = 57600;
 }

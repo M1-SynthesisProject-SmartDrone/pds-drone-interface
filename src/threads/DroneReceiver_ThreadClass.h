@@ -10,6 +10,7 @@ class DroneReceiver_ThreadClass : public Abstract_ThreadClass
 {
 private:
     std::shared_ptr<Drone> m_drone;
+    bool m_isSensorsOnly;
 
     void handleMessage(mavlink_message_t &message);
 
@@ -23,7 +24,7 @@ private:
     void handleHighresImu(mavlink_highres_imu_t &highresImu);
     void handleBatteryStatus(mavlink_battery_status_t &batteryStatus);
 public:
-    DroneReceiver_ThreadClass(std::shared_ptr<Drone> drone);
+    DroneReceiver_ThreadClass(std::shared_ptr<Drone> drone, bool isSensorsOnly = true);
     ~DroneReceiver_ThreadClass();
 
     void run();
