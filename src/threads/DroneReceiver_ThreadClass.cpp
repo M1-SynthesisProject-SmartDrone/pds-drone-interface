@@ -29,7 +29,7 @@ void DroneReceiver_ThreadClass::run()
         // onStartLoop();
 
         mavlink_message_t message;
-        if (m_drone->read_message(message))
+        if (m_drone->read_message(message) != -1)// TODO not normal
         {
             handleMessage(message);
         }
@@ -104,6 +104,19 @@ void DroneReceiver_ThreadClass::handleMessage(mavlink_message_t& message)
         mavlink_battery_status_t battery_status;
         mavlink_msg_battery_status_decode(&message, &battery_status);
         handleBatteryStatus(battery_status);
+        break;
+    }
+    case MAVLINK_MSG_ID_SYS_STATUS:
+    {
+        mavlink_sys_status_t message_status;
+        mavlink_msg_sys_status_decode(&message, &message_status);
+        handleSysStatus(message_status);
+        break;
+    }
+    case MAVLINK_MSG_ID_VFR_HUD:
+    {
+        mavlink_vfr_hud_t message_vfr_hud;
+        mavlink_msg_vfr_hud_decode(&message, &message_vfr_hud);
         break;
     }
     default:
@@ -229,13 +242,13 @@ void DroneReceiver_ThreadClass::handleAttitude(mavlink_attitude_t& attitude)
         << "]\n";
     cout << ss.str();
 #endif
-    if (m_drone->attitude.time_boot_ms > attitude.time_boot_ms)
-    {
-        LOG_F(WARNING, "Received time boot ms before actual one (%d vs %d)",
-            m_drone->attitude.time_boot_ms,
-            attitude.time_boot_ms);
-    }
-    else
+    // if (m_drone->attitude.time_boot_ms > attitude.time_boot_ms)
+    // {
+    //     LOG_F(WARNING, "Received time boot ms before actual one (%d vs %d)",
+    //         m_drone->attitude.time_boot_ms,
+    //         attitude.time_boot_ms);
+    // }
+    // else
     {
         m_drone->attitude = attitude;
         pdsChannels::attitude.floats[0] = attitude.roll;
@@ -293,7 +306,7 @@ void DroneReceiver_ThreadClass::handleGlobalPosition(mavlink_global_position_int
 #endif
         return;
     }
-    
+
 #ifdef DRONERECEIVER_THREADCLASS_DEBUG
     string buffer1 = "global_position : [lat:" + to_string(globalPosition.lat)
         + " lon: " + to_string(globalPosition.lon)
@@ -344,7 +357,7 @@ void DroneReceiver_ThreadClass::handleHighresImu(mavlink_highres_imu_t& highresI
     buffer1 = buffer1 + " Temperature: " + to_string(highresImu.temperature) + "\n\n";
     cout << buffer1 << endl;
 #endif
-    if (m_drone->highres_imu.time_usec > highresImu.time_usec)
+    if (highresImu.time_usec == 0)
     {
         LOG_F(WARNING, "Received time usec before actual one (%ld vs %ld)",
             m_drone->highres_imu.time_usec,
@@ -352,6 +365,7 @@ void DroneReceiver_ThreadClass::handleHighresImu(mavlink_highres_imu_t& highresI
     }
     else
     {
+        if (highresImu.temperature <= 0) return; // TODO REMOVE
         m_drone->highres_imu = highresImu;
         pdsChannels::highresImu.floats[0] = highresImu.xacc;
         pdsChannels::highresImu.floats[1] = highresImu.yacc;
@@ -382,4 +396,24 @@ void DroneReceiver_ThreadClass::handleBatteryStatus(mavlink_battery_status_t& ba
     pdsChannels::battery.ints32[3] = batteryStatus.current_battery;
     pdsChannels::battery.ints32[4] = batteryStatus.battery_remaining;
     pdsChannels::battery.ints32[5] = batteryStatus.time_remaining;
+}
+
+void DroneReceiver_ThreadClass::handleSysStatus(mavlink_sys_status_t& sysStatus)
+{
+#ifdef DRONERECEIVER_THREADCLASS_DEBUG
+    cout << "System status : drop rate=" << sysStatus.drop_rate_comm << "\n";
+#endif
+}
+
+void DroneReceiver_ThreadClass::handleVfrHud(mavlink_vfr_hud_t& vfrStatus)
+{
+#ifdef DRONERECEIVER_THREADCLASS_DEBUG
+    cout << "Vfr Hud : [airspeed=" << vfrStatus.airspeed
+        << " alt=" << vfrStatus.alt
+        << " climb=" << vfrStatus.climb
+        << " groundspeed=" << vfrStatus.groundspeed
+        << " heading=" << vfrStatus.heading
+        << " throttle" << vfrStatus.throttle
+        << "]\n";
+#endif
 }

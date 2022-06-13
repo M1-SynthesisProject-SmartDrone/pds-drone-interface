@@ -23,6 +23,8 @@ private:
     void handleRawImu(mavlink_raw_imu_t &rawImu);
     void handleHighresImu(mavlink_highres_imu_t &highresImu);
     void handleBatteryStatus(mavlink_battery_status_t &batteryStatus);
+    void handleSysStatus(mavlink_sys_status_t &sysStatus);
+    void handleVfrHud(mavlink_vfr_hud_t &vfrStatus);
 public:
     DroneReceiver_ThreadClass(std::shared_ptr<Drone> drone, bool isSensorsOnly = true);
     ~DroneReceiver_ThreadClass();

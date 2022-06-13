@@ -17,7 +17,7 @@
 
 using namespace std;
 
-const short DRONE_TIMEOUT_LIMIT = 10;
+constexpr int DRONE_TIMEOUT_LIMIT = 10 * 000;
 
 void handleDrone(bool checkDrone, shared_ptr<Drone> drone, char* serialPath, int serialBaudrate);
 void initDrone(shared_ptr<Drone> drone, char* serialPath, int serialBaudrate);
@@ -126,9 +126,9 @@ void initDrone(shared_ptr<Drone> drone, char* serialPath, int serialBaudrate)
     LOG_F(INFO, "Try init drone parameters");
     if (drone->init_parameters(DRONE_TIMEOUT_LIMIT) != 0)
     {
-        stringstream ss;
-        ss << "Cannot init parameters : " << strerror(errno);
-        throw runtime_error(ss.str());
+        // stringstream ss;
+        // ss << "Cannot init parameters : " << strerror(errno);
+        // throw runtime_error(ss.str());
     }
     // TODO : create messages to handle this in a better way
     // If GPS disabled
